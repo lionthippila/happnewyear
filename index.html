@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Happy New Year 2026 🤍</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #020617;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --accent: #f43f5e;
+  --gold: #fbbf24;
+}
+
+* { 
+  box-sizing: border-box; 
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Prompt", sans-serif;
+  overflow: hidden;
+  touch-action: none;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 32px;
+  padding: 40px 24px;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: fadeUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.photo-container {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 20px;
+  flex-shrink: 0;
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(244, 63, 94, 0.2);
+  border: 4px solid #fff;
+  transition: transform 0.5s ease;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heart-badge {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: var(--accent);
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+h1 {
+  margin: 10px 0 5px;
+  font-size: 1.8rem;
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+#countdown-wrapper {
+  margin-bottom: 20px;
+}
+
+#countdown {
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+  color: var(--accent);
+  font-weight: 600;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 20px;
+  display: inline-block;
+  min-width: 200px;
+}
+
+#message {
+  display: none;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text);
+  text-align: left;
+  background: #f8fafc;
+  padding: 24px;
+  border-radius: 24px;
+  margin-top: 10px;
+  border-left: 5px solid var(--accent);
+  white-space: pre-line;
+  position: relative;
+}
+
+.music-btn {
+  margin-top: 25px;
+  border: none;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.music-btn.playing {
+  background: var(--accent);
+}
+
+.click-hint {
+  position: fixed;
+  bottom: 20px;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.8rem;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.floating-heart {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10;
+  animation: flyUp 1s ease-out forwards;
+}
+
+@keyframes flyUp {
+  to { transform: translateY(-100px) scale(2); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="container">
+  <div class="card">
+    <div class="photo-container">
+      <div class="photo">
+        <img src="photo.jpg" alt="Love" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky'; this.style.padding='10px'">
+      </div>
+      <div class="heart-badge">🤍</div>
+    </div>
+
+    <h1>Happy New Year 🤍</h1>
+    <div class="subtitle">ขอบคุณที่เข้ามาเติมเต็มทุกอย่างในชีวิตนะ</div>
+
+    <div id="countdown-wrapper">
+      <div id="countdown">00 : 00 : 00</div>
+    </div>
+    
+    <div id="message"></div>
+
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+      <span id="music-icon">🎵</span>
+      <span id="music-text">เปิดเพลงประกอบ</span>
+    </button>
+  </div>
+</div>
+
+<div class="click-hint">ลองแตะที่หน้าจอเพื่อส่งความรักดูนะ 💖</div>
+
+<audio id="bgm" loop crossorigin="anonymous">
+  <source src="https://files.catbox.moe/fnkn3i.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ===== CONFIGURATION ===== */
+// ตั้งเวลาเป็นปี 2026
+// const targetDate = new Date('January 1, 2026 00:00:00');
+
+// หากต้องการทดสอบ ให้ใช้บรรทัดล่างนี้แทน (5 วินาที)
+const targetDate = new Date(Date.now() + 5000);
+
+const fullText = `ขอให้ปี 2026 นี้ ✨
+เป็นปีที่ใจดีกับเธออ
+และมีรอยยิ้มจากความสุขเล็กๆ เกิดขึ้นในทุกวันน
+
+ไม่ว่าจะเป็นเรื่องดีหรือเรื่องไม่ดี
+เค้าอยากให้เธอรู้ไว้เสมอว่าาา
+เค้าจะอยู่ข้างๆ คอยซัพพอร์ตเธอเองงง
+
+เค้าอาจไม่ใช่คนที่สมบูรณ์แบบที่สุดด
+แต่เค้าสัญญาว่าจะรักและดูแลเธอให้ดีที่สุดด
+จะอยู่ข้างเธอในทุกช่วงเวลาา
+จับมือกันเดินไปด้วยกันแบบนี้ไปนานๆนะ 
+
+ไลอ้อนรักเนยมากๆเลยนร้าาาา 🤍✨`;
+
+/* ===== MUSIC SYSTEM ===== */
+const bgm = document.getElementById("bgm");
+const musicBtn = document.getElementById("musicBtn");
+const musicIcon = document.getElementById("music-icon");
+const musicText = document.getElementById("music-text");
+let isPlaying = false;
+
+function toggleMusic() {
+  if (isPlaying) {
+    bgm.pause();
+    musicIcon.textContent = "🎵";
+    musicText.textContent = "เล่นเพลงต่อ";
+    musicBtn.classList.remove("playing");
+  } else {
+    bgm.volume = 0.5;
+    bgm.play().catch(e => {
+        console.log("Waiting for user interaction");
+        document.body.addEventListener('click', () => { if(!isPlaying) bgm.play(); }, {once: true});
+    });
+    musicIcon.textContent = "⏸";
+    musicText.textContent = "ปิดเพลง";
+    musicBtn.classList.add("playing");
+  }
+  isPlaying = !isPlaying;
+}
+
+/* ===== COUNTDOWN & TYPING ===== */
+const countdownEl = document.getElementById("countdown");
+const messageEl = document.getElementById("message");
+const card = document.querySelector('.card');
+
+let charIndex = 0;
+let isTyping = false;
+
+function typeMessage() {
+  if (charIndex < fullText.length) {
+    isTyping = true;
+    messageEl.textContent += fullText.charAt(charIndex);
+    charIndex++;
+    card.scrollTop = card.scrollHeight;
+    setTimeout(typeMessage, 60);
+  } else {
+    isTyping = false;
+  }
+}
+
+function updateCountdown() {
+  const now = new Date();
+  const diff = targetDate - now;
+
+  if (diff <= 0) {
+    document.getElementById("countdown-wrapper").style.display = "none";
+    messageEl.style.display = "block";
+    if (!isCelebrationTime) {
+        if (!isPlaying) toggleMusic();
+        typeMessage();
+        isCelebrationTime = true;
+    }
+    return;
+  }
+
+  const h = Math.floor(diff / (1000 * 60 * 60));
+  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+  countdownEl.textContent = 
+    `${h.toString().padStart(2, "0")} : ${m.toString().padStart(2, "0")} : ${s.toString().padStart(2, "0")}`;
+  
+  requestAnimationFrame(updateCountdown);
+}
+updateCountdown();
+
+/* ===== CLICK EFFECT ===== */
+document.addEventListener('click', (e) => {
+    if (e.target.closest('button')) return;
+    const heart = document.createElement('div');
+    heart.className = 'floating-heart';
+    heart.textContent = ['❤️', '💖', '🤍', '✨', '🌸'][Math.floor(Math.random() * 5)];
+    heart.style.left = e.clientX + 'px';
+    heart.style.top = e.clientY + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 1000);
+});
+
+/* ===== VISUAL EFFECTS (SNOW & FIREWORKS) ===== */
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+let particles = [];
+let snowflakes = [];
+let isCelebrationTime = false;
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+class Snowflake {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height - canvas.height;
+    this.size = Math.random() * 2 + 1;
+    this.speed = Math.random() * 0.8 + 0.3;
+    this.velX = Math.random() * 0.4 - 0.2;
+    this.opacity = Math.random() * 0.4 + 0.2;
+  }
+  update() {
+    this.y += this.speed;
+    this.x += this.velX;
+    if (this.y > canvas.height) this.reset();
+  }
+  draw() {
+    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+class FireworkParticle {
+  constructor(x, y, color, vx, vy) {
+    this.x = x; this.y = y; this.color = color;
+    this.vx = vx;
+    this.vy = vy;
+    this.alpha = 1;
+    this.decay = Math.random() * 0.015 + 0.012; // เร่งการหายตัวให้เร็วขึ้นกันค้าง
+  }
+  update() {
+    this.vx *= 0.94; this.vy *= 0.94;
+    this.vy += 0.1; // gravity
+    this.x += this.vx; this.y += this.vy;
+    this.alpha -= this.decay;
+  }
+  draw() {
+    if (this.alpha <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 4;
+    ctx.shadowColor = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+for (let i = 0; i < 70; i++) snowflakes.push(new Snowflake());
+
+function createFirework() {
+  if (!isCelebrationTime) return;
+  const x = Math.random() * canvas.width;
+  const y = Math.random() * (canvas.height * 0.45);
+  const color = `hsl(${Math.random() * 360}, 100%, 75%)`;
+  const isHeart = Math.random() > 0.6; // โอกาส 40% ที่จะเป็นรูปหัวใจ
+
+  const particleCount = isHeart ? 50 : 60;
+  
+  for (let i = 0; i < particleCount; i++) {
+    let vx, vy;
+    if (isHeart) {
+      // สูตรสร้างพลุรูปหัวใจ
+      const t = (i / particleCount) * Math.PI * 2;
+      vx = 16 * Math.pow(Math.sin(t), 3) * 0.3;
+      vy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) * 0.3;
+      // เพิ่มความเร็วสุ่มเล็กน้อย
+      vx *= (Math.random() * 0.5 + 0.8);
+      vy *= (Math.random() * 0.5 + 0.8);
+    } else {
+      const angle = Math.random() * Math.PI * 2;
+      const force = Math.random() * 6 + 2;
+      vx = Math.cos(angle) * force;
+      vy = Math.sin(angle) * force;
+    }
+    particles.push(new FireworkParticle(x, y, isHeart ? '#f43f5e' : color, vx, vy));
+  }
+}
+
+let lastFireworkTime = 0;
+function animate(time) {
+  // ทำให้พื้นหลังจางลงเพื่อลบเงาพลุเก่าได้ดีขึ้น
+  ctx.fillStyle = "rgba(2, 6, 23, 0.3)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  snowflakes.forEach(s => { s.update(); s.draw(); });
+
+  // จัดการพลุ
+  if (isCelebrationTime && time - lastFireworkTime > 1500) {
+    createFirework();
+    lastFireworkTime = time;
+  }
+
+  for (let i = particles.length - 1; i >= 0; i--) {
+    particles[i].update();
+    particles[i].draw();
+    if (particles[i].alpha <= 0) {
+      particles.splice(i, 1);
+    }
+  }
+  
+  // ป้องกัน Memory Leak ถ้า Particle เยอะเกินไป
+  if (particles.length > 500) particles.splice(0, 50);
+
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
